@@ -7,6 +7,7 @@ import Search from "./Components/Search.js";
 class App extends React.Component {
   state = {
     quotes: [],
+    noResults: false,
     isLoading: true
   };
 
@@ -20,6 +21,7 @@ class App extends React.Component {
       .then(json => {
         this.setState({
           isLoading: false,
+          noResults: false,
           quotes: [json]
         });
       });
@@ -35,40 +37,42 @@ class App extends React.Component {
     fetch(`https://kadir-quotes-app.glitch.me/quotes/search?word=${keyWord}`)
       .then(res => res.json())
       .then(json => {
-        this.setState({
-          isLoading: false,
-          quotes: json
-        });
+        json.length > 0
+          ? this.setState({
+              isLoading: false,
+              noResults: false,
+              quotes: json
+            })
+          : this.setState({ isLoading: false, noResults: true });
       });
   };
 
   displayQuotes = () => {
-    fetch("https://kadir-quotes-app.glitch.me/quotes/")
+    fetch("https://kadir-quotes-app.glitch.me/quotes")
       .then(res => res.json())
       .then(json =>
         this.setState({
           isLoading: false,
+          noResults: false,
           quotes: json
         })
       );
   };
 
   render() {
+    const { isLoading, noResults, quotes } = this.state;
     return (
       <div className="App">
         <h1>Quote Generator</h1>
         <Button handleClick={this.displayQuotes} content="Show Quotes" />
         <Button handleClick={this.randomQuote} content="Random" />
         <Search search={this.search} />
-        {this.state.isLoading ? (
-          "Loading...."
-        ) : this.state.quotes.length > 0 ? (
-          this.state.quotes.map(quote => {
-            return <Quote quote={quote} />;
-          })
-        ) : (
-          <p style={paraStyle}>no results found</p>
-        )}
+        {noResults && <p style={paraStyle}>no results found</p>}
+        {isLoading
+          ? "Loading...."
+          : quotes.map(quote => {
+              return <Quote quote={quote} />;
+            })}
       </div>
     );
   }
