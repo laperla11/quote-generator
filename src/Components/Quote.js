@@ -12,6 +12,7 @@ const Quote = props => {
 const divStyle = {
   border: "2px solid black",
   borderRadius: "5px",
+  padding: "0 10px",
   marginBottom: "10px"
 };
 
