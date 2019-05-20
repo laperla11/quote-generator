@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Button from "./Button.js";
 
 export default class Search extends Component {
   constructor(props) {
@@ -28,7 +29,7 @@ export default class Search extends Component {
           value={this.state.value}
           onChange={this.handleChange}
         />
-        <button onClick={this.handleSubmit}>search</button>
+        <Button handleClick={this.handleSubmit} content="search" />
       </form>
     );
   }

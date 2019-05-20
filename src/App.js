@@ -27,14 +27,8 @@ class App extends React.Component {
       });
   };
 
-  handleChange = event => {
-    this.setState({
-      searchWord: event.target.value
-    });
-  };
-
   search = keyWord => {
-    fetch(`https://kadir-quotes-app.glitch.me/quotes/search?word=${keyWord}`)
+    fetch(`https://kadir-quotes-app.glitch.me/quotes/search?term=${keyWord}`)
       .then(res => res.json())
       .then(json => {
         json.length > 0
