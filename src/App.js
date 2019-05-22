@@ -45,7 +45,7 @@ class App extends React.Component {
               isLoading: false,
               noResults: false,
               error: true,
-              errorMsg: json.msg
+              errorMsg: "Please type a keyword to search"
             })
           : json.length > 0
           ? this.setState({
