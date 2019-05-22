@@ -7,6 +7,8 @@ import Search from "./Components/Search.js";
 class App extends React.Component {
   state = {
     quotes: [],
+    error: false,
+    errorMsg: "",
     noResults: false,
     isLoading: true
   };
@@ -21,6 +23,7 @@ class App extends React.Component {
       .then(json => {
         this.setState({
           isLoading: false,
+          error: false,
           noResults: false,
           quotes: [json]
         });
@@ -29,12 +32,26 @@ class App extends React.Component {
 
   search = keyWord => {
     fetch(`https://kadir-quotes-app.glitch.me/quotes/search?term=${keyWord}`)
+      .then(res => {
+        if (res.status === 400) {
+          this.setState({ error: true });
+        }
+        return res;
+      })
       .then(res => res.json())
       .then(json => {
-        json.length > 0
+        json.msg
           ? this.setState({
               isLoading: false,
               noResults: false,
+              error: true,
+              errorMsg: json.msg
+            })
+          : json.length > 0
+          ? this.setState({
+              isLoading: false,
+              noResults: false,
+              error: false,
               quotes: json
             })
           : this.setState({ isLoading: false, noResults: true });
@@ -48,20 +65,22 @@ class App extends React.Component {
         this.setState({
           isLoading: false,
           noResults: false,
+          error: false,
           quotes: json
         })
       );
   };
 
   render() {
-    const { isLoading, noResults, quotes } = this.state;
+    const { isLoading, noResults, error, errorMsg, quotes } = this.state;
     return (
       <div className="App">
         <h1>Quote Generator</h1>
         <Button handleClick={this.displayQuotes} content="Show Quotes" />
         <Button handleClick={this.randomQuote} content="Random" />
         <Search search={this.search} />
-        {noResults && <p style={paraStyle}>no results found</p>}
+        {error && <p style={paraStyle}>{errorMsg}</p>}
+        {noResults && <p style={paraStyle}>No results found</p>}
         {isLoading
           ? "Loading...."
           : quotes.map(quote => {
