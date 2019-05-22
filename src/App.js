@@ -80,7 +80,7 @@ class App extends React.Component {
         <Button handleClick={this.randomQuote} content="Random" />
         <Search search={this.search} />
         {error && <p style={paraStyle}>{errorMsg}</p>}
-        {noResults && <p style={paraStyle}>No results found</p>}
+        {noResults && <p style={paraStyle}>No results found!</p>}
         {isLoading
           ? "Loading...."
           : quotes.map(quote => {
